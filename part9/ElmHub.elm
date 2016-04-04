@@ -119,7 +119,12 @@ view address model =
 viewSearchResults : Address Action -> Dict ResultId SearchResult -> List Html
 viewSearchResults address results =
   -- TODO sort by star count and render
-  []
+  -- Take a dict, convert back to a list
+  -- Then sort
+  results
+    |> Dict.values
+    |> List.sortBy (.stars >> negate)
+    |> List.map (viewSearchResult address)
 
 
 onInput address wrap =
@@ -166,14 +171,15 @@ update searchAddress action model =
       let
         resultsById : Dict ResultId SearchResult
         resultsById =
-          -- TODO convert results list into a Dict
-          Dict.empty
+          results
+            |> List.map (\result -> ( result.id, result ))
+            |> Dict.fromList
       in
         ( { model | results = resultsById }, Effects.none )
 
     DeleteById id ->
       -- TODO delete the result with the given id
-      ( model, Effects.none )
+      ( { model | results = Dict.remove id model.results }, Effects.none )
 
     SetErrorMessage errorMessage ->
       ( { model | errorMessage = errorMessage }, Effects.none )

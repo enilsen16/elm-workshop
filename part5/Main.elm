@@ -76,9 +76,9 @@ searchResultDecoder =
   -- See https://developer.github.com/v3/search/#example
   -- TODO replace these `hardcoded` with calls to `require`
   decode SearchResult
-    |> hardcoded 0
-    |> hardcoded ""
-    |> hardcoded 0
+    |> required "id" Json.Decode.int
+    |> required "full_name" Json.Decode.string
+    |> required "stargazers_count" Json.Decode.int
 
 
 type alias Model =

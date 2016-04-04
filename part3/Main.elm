@@ -78,13 +78,15 @@ viewSearchResult address result =
         [ text result.name ]
     , button
         -- TODO add an onClick handler that sends a DELETE_BY_ID action
-        [ class "hide-result" ]
+        [ class "hide-result", onClick address { actionType = "DELETE_BY_ID", id = result.id } ]
         [ text "X" ]
     ]
 
 
 type alias Action =
   { -- TODO implement this type alias
+    actionType : String
+  , id : ResultId
   }
 
 
@@ -92,7 +94,10 @@ update : Action -> Model -> Model
 update action model =
   -- TODO if we receive a DELETE_BY_ID action,
   -- build a new model without the given ID present anymore.
-  model
+  if action.actionType == "DELETE_BY_ID" then
+    { model | results = List.filter (\result -> result.id /= action.id) model.results }
+  else
+    model
 
 
 main =

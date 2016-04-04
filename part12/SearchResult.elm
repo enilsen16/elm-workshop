@@ -37,8 +37,12 @@ decoder =
 
 update : Action -> Model -> ( Model, Effects Action )
 update action model =
-  -- TODO implement Expand and Collapse logic
-  ( model, Effects.none )
+  case action of
+    Expand ->
+      ( { model | expanded = True }, Effects.none )
+
+    Collapse ->
+      ( { model | expanded = False }, Effects.none )
 
 
 view : Address Action -> Model -> Html
@@ -52,12 +56,12 @@ view address model =
             [ text model.name ]
         , button
             -- TODO when the user clicks, send a Collapse action
-            [ class "hide-result" ]
+            [ class "hide-result", onClick address Collapse ]
             [ text "X" ]
         ]
        else
         [ button
             -- TODO when the user clicks, send an Expand action
-            [ class "expand-result" ]
+            [ class "expand-result", onClick address Expand ]
             [ text "Show" ]
         ]

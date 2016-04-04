@@ -25,7 +25,9 @@ searchFeed query =
 
     -- TODO define task as:
     --
-    -- task = performAction argument1 argument2 argument3
+    task =
+      performAction HandleSearchResponse HandleSearchError (Http.get responseDecoder url)
+
     --
     -- Use these "ingredients" to give `performAction` the arguments it needs:
     --
@@ -36,13 +38,16 @@ searchFeed query =
     -- HandleSearchError
     --
     -- Hint: http://package.elm-lang.org/packages/evancz/elm-http/3.0.0/Http#get
-    task =
-      "TODO performAction ..."
+    -- task =
+    -- "TODO performAction ..."
   in
     -- TODO replace this `Effects.none` with a call to:
     --
-    -- Effects.task task
-    Effects.none
+    Effects.task task
+
+
+
+-- Effects.none
 
 
 {-| Note: this will be a standard function in the next release of Elm.
@@ -79,7 +84,7 @@ searchResultDecoder =
   decode SearchResult
     |> required "id" Json.Decode.int
     |> required "full_name" Json.Decode.string
-    |> required "stargazers_count" Json.Decode.int
+    |> required "description" Json.Decode.int
 
 
 type alias Model =
@@ -176,15 +181,20 @@ update action model =
       ( { model | results = results }, Effects.none )
 
     HandleSearchError error ->
-      -- TODO if decoding failed, store the message in model.errorMessage
-      --
-      -- Hint 1: look for "decode" in the documentation for this union type:
-      -- http://package.elm-lang.org/packages/evancz/elm-http/3.0.0/Http#Error
-      --
-      -- Hint 2: to check if this is working, break responseDecoder
-      -- by changing "stargazers_count" to "description"
-      ( model, Effects.none )
+      case error of
+        Http.UnexpectedPayload errorMessage ->
+          ( { model | errorMessage = Just errorMessage }, Effects.none )
 
+        _ ->
+          ( { model | errorMessage = Just "Error with GitHub" }, Effects.none )
+
+    -- TODO if decoding failed, store the message in model.errorMessage
+    --
+    -- Hint 1: look for "decode" in the documentation for this union type:
+    -- http://package.elm-lang.org/packages/evancz/elm-http/3.0.0/Http#Error
+    --
+    -- Hint 2: to check if this is working, break responseDecoder
+    -- by changing "stargazers_count" to "description"
     SetQuery query ->
       ( { model | query = query }, Effects.none )
 

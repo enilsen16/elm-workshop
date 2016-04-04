@@ -18,16 +18,15 @@ view model =
     [ class "content" ]
     [ header
         []
-        [ -- TODO add the equivalent of <h1>ElmHub</h1> right before the tagline
-          span [ class "tagline" ] [ text "“Like GitHub, but for Elm things.”" ]
+        [ h1 [] [ text "ElmHub" ]
+        , span [ class "tagline" ] [ text "“Like GitHub, but for Elm things.”" ]
         ]
     , ul
         [ class "results" ]
         [ li
             []
-            [ span [ class "star-count" ] [{- TODO display the number of stars -}]
-              -- TODO use the model to put a link here that points to
-              -- https://github.com/TheSeamau5/elm-checkerboardgrid-tutorial
+            [ span [ class "star-count" ] [ text (toString (model.result.stars)) ]
+            , a [ href ("https://github.com/" ++ model.result.name) ] [ text model.result.name ]
             ]
         ]
     ]

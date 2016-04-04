@@ -23,6 +23,7 @@ type alias ResultId =
 
 {-| TODO add a type annotation to this function
 -}
+model : Model
 model =
   { query = "tutorial"
   , results =
@@ -52,6 +53,7 @@ model =
 
 {-| TODO add a type annotation to this function
 -}
+view : Model -> Html
 view model =
   div
     [ class "content" ]
@@ -62,12 +64,13 @@ view model =
         ]
     , ul
         [ class "results" ]
-        [{- TODO use model.results and viewSearchResults to display results -}]
+        (List.map viewSearchResult model.results)
     ]
 
 
 {-| TODO add a type annotation to this function
 -}
+viewSearchResult : SearchResult -> Html
 viewSearchResult result =
   li
     []
@@ -81,5 +84,6 @@ viewSearchResult result =
 
 {-| TODO add a type annotation to this function
 -}
+main : Html
 main =
   view model

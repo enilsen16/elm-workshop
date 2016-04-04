@@ -119,6 +119,7 @@ update action model =
 
     UpdateSearchResult id childAction ->
       let
+        updated : Maybe ( SearchResult.Model, Effects SearchResult.Action )
         updated =
           model.results
             |> Dict.get id
@@ -130,6 +131,7 @@ update action model =
 
           Just ( newChildModel, childEffects ) ->
             let
+              effects : Effects Action
               effects =
                 Effects.map (UpdateSearchResult id) childEffects
 

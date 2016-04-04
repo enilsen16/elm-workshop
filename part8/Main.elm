@@ -7,7 +7,7 @@ import Task exposing (Task)
 import Html exposing (Html)
 import Signal
 import Json.Encode
-import Json.Decode
+import Json.Decode exposing (..)
 
 
 main : Signal Html
@@ -47,11 +47,19 @@ responseActions =
 
 decodeGithubResponse : Json.Encode.Value -> Action
 decodeGithubResponse value =
-  -- TODO use Json.Decode.DecodeValue to decode the response into an Action.
-  --
-  -- Hint: look at ElmHub.elm, specifically the definition of Action and
-  -- the deefinition of responseDecoder
-  SetErrorMessage (Just "TODO decode the response!")
+  case decodeValue responseDecoder value of
+    Ok results ->
+      SetResults results
+
+    Err message ->
+      SetErrorMessage (Just message)
+
+
+
+-- TODO use Json.Decode.decodeValue to decode the response into an Action.
+--
+-- Hint: look at ElmHub.elm, specifically the definition of Action and
+-- the definition of responseDecoder
 
 
 port githubResponse : Signal Json.Encode.Value
