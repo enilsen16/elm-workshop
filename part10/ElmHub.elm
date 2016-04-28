@@ -35,8 +35,7 @@ searchFeed query =
 
 responseDecoder : Decoder (List SearchResult.Model)
 responseDecoder =
-  -- TODO make use of SearchResult's decoder
-  Json.Decode.succeed []
+  "items" := Json.Decode.list SearchResult.decoder
 
 
 type alias Model =
@@ -74,7 +73,7 @@ viewSearchResults address results =
   results
     |> Dict.values
     |> List.sortBy (.stars >> negate)
-    |> List.map (\_ -> div [] [ text "TODO replace this line with view logic from SearchResult" ])
+    |> List.map (SearchResult.view address DeleteById)
 
 
 onInput address wrap =
